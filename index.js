@@ -3,8 +3,10 @@ const app = express();
 const bodyParser = require('body-parser');
 
 const dateformat = require('dateformat');
+const morgan = require('morgan');
 
 app.use(bodyParser.json());
+app.use(morgan('tiny'));
 
 let persons = [
   {
