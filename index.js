@@ -86,4 +86,10 @@ app.delete('/api/persons/:id', (req, res) => {
   res.status(204).end();
 });
 
+const unknownEndpoint = (req, res) => {
+  res.status(400).send({ error: 'unknown endpoint' });
+};
+
+app.use(unknownEndpoint);
+
 app.listen(3001);
