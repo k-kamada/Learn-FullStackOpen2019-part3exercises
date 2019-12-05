@@ -1,7 +1,10 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 
 const dateformat = require('dateformat');
+
+app.use(bodyParser.json());
 
 let persons = [
   {
@@ -47,10 +50,28 @@ app.get('/info', (req, res) => {
   res.send(content);
 });
 
+const genRandomInt = (maxVar) => {
+  return Math.floor(maxVar * Math.random());
+}
+
+app.post('/api/persons', (req, res) => {
+  const body = req.body;
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: genRandomInt(100000000),
+  }
+
+  persons = persons.concat(person);
+
+  res.json(person);
+});
+
 app.delete('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id);
   persons = persons.filter(note => note.id !== id);
-  res.status('204').end();
+  res.status(204).end();
 });
 
 app.listen(3001);
