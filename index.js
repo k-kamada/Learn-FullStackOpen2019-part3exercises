@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 
+const dateformat = require('dateformat');
+
 const notes = [
   {
     name: "Arto Hellas",
@@ -26,6 +28,12 @@ const notes = [
 
 app.get('/api/persons', (req, res) => {
   res.send(notes);
+});
+
+app.get('/info', (req, res) => {
+  const formattedDate = dateformat(new Date());
+  const content = `Phonebook has info for ${notes.length} people<br>${formattedDate}`;
+  res.send(content);
 });
 
 app.listen(3001);
