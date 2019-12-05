@@ -3,7 +3,7 @@ const app = express();
 
 const dateformat = require('dateformat');
 
-const persons = [
+let persons = [
   {
     name: "Arto Hellas",
     number: "040-123456",
@@ -45,6 +45,12 @@ app.get('/info', (req, res) => {
   const formattedDate = dateformat(new Date());
   const content = `Phonebook has info for ${persons.length} people<br>${formattedDate}`;
   res.send(content);
+});
+
+app.delete('/api/persons/:id', (req, res) => {
+  const id = Number(req.params.id);
+  persons = persons.filter(note => note.id !== id);
+  res.status('204').end();
 });
 
 app.listen(3001);
