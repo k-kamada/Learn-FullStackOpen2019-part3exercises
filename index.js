@@ -4,9 +4,11 @@ const bodyParser = require('body-parser');
 
 const dateformat = require('dateformat');
 const morgan = require('morgan');
+const cors = require('cors');
 
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
+app.use(cors());
 
 let persons = [
   {
