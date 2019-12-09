@@ -31,10 +31,6 @@ app.get('/info', (req, res) => {
   res.send(content);
 });
 
-const genRandomInt = (maxVar) => {
-  return Math.floor(maxVar * Math.random());
-}
-
 app.post('/api/persons', (req, res) => {
   const body = req.body;
 
@@ -44,21 +40,14 @@ app.post('/api/persons', (req, res) => {
     });
   }
 
-  if (persons.find(person => person.name === body.name)) {
-    return res.status(400).json({
-      error: 'name must be unique'
-    });
-  }
-
-  const person = {
+  const person = new Person({
     name: body.name,
     number: body.number,
-    id: genRandomInt(100000000),
-  }
+  });
 
-  persons = persons.concat(person);
-
-  res.json(person);
+  person.save().then(savedPerson => {
+    res.json(savedPerson.toJSON());
+  });
 });
 
 app.delete('/api/persons/:id', (req, res) => {
