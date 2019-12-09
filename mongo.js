@@ -12,7 +12,7 @@ const password = process.argv[2];
 const dbName = 'phonebook';
 const url = `mongodb+srv://fullstack:${password}@cluster0-hllsn.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
-mongoose.connect(url, {useNewUrlParser: true});
+mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
 
 const personSchema = new mongoose.Schema({
   name: String,
