@@ -33,10 +33,14 @@ app.get('/api/persons/:id', (req, res, next) => {
     .catch(error => next(error));
 });
 
-app.get('/info', (req, res) => {
-  const formattedDate = dateformat(new Date());
-  const content = `Phonebook has info for ${persons.length} people<br>${formattedDate}`;
-  res.send(content);
+app.get('/info', (req, res, next) => {
+  Person.count({})
+    .then(numberOfPerson => {
+      const formattedDate = dateformat(new Date());
+      const content = `Phonebook has info for ${numberOfPerson} people<br>${formattedDate}`;
+      res.send(content);
+    })
+    .catch(error => next(error));
 });
 
 app.post('/api/persons', (req, res, next) => {
