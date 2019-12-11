@@ -48,16 +48,36 @@ app.post('/api/persons', (req, res, next) => {
     });
   }
 
-  const person = new Person({
-    name: body.name,
-    number: body.number,
-  });
+  Person.find({ name: body.name })
+    .then(foundPerson => {
+      if (foundPerson.length !== 0) {
+        // already exists
+        const person = {
+          name: body.name,
+          number: body.number,
+        };
+        
+        Person.findByIdAndUpdate(foundPerson[0]._id, person, { new: true })
+          .then(updatedPerson => {
+            res.json(updatedPerson.toJSON());
+          })
+          .catch(error => next(error));
+      } else {
+        // new person
+        const person = new Person({
+          name: body.name,
+          number: body.number,
+        });
 
-  person.save()
-    .then(savedPerson => {
-      res.json(savedPerson.toJSON());
+        person.save()
+          .then(savedPerson => {
+            res.json(savedPerson.toJSON());
+          })
+          .catch(error => next(error));
+      }
     })
     .catch(error => next(error));
+
 });
 
 app.delete('/api/persons/:id', (req, res, next) => {
