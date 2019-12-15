@@ -12,7 +12,7 @@ const password = process.argv[2];
 const dbName = 'phonebook';
 const url = `mongodb+srv://fullstack:${password}@cluster0-hllsn.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
-mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const personSchema = new mongoose.Schema({
   name: String,
@@ -32,7 +32,7 @@ if (process.argv.length === 3) {
       });
       mongoose.connection.close();
     })
-    .then(result => {
+    .then(() => {
       process.exit(0);
     });
 }
@@ -48,7 +48,7 @@ const person = new Person({
 });
 
 person.save()
-  .then(result => {
+  .then(() => {
     console.log(`Added ${newName} number ${newNumber} to ${dbName}`);
     mongoose.connection.close();
   })

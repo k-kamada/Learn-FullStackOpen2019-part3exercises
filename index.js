@@ -11,7 +11,7 @@ const Person = require('./models/person');
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
 app.use(cors());
-app.use(express.static('build'))
+app.use(express.static('build'));
 
 app.get('/api/persons', (req, res, next) => {
   Person.find({})
@@ -60,7 +60,7 @@ app.post('/api/persons', (req, res, next) => {
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
-    .then(result => {
+    .then(() => {
       res.status(204).end();
     })
     .catch(error => next(error));
@@ -79,9 +79,9 @@ const errorHandler = (error, req, res, next) => {
     return res.status(400).send({ error: 'malformatted id' });
   } else if (error.name === 'ValidationError') {
     if (error.errors.name) {
-      return res.status(400).send({ error: `${error.errors.name.message}`});
+      return res.status(400).send({ error: `${error.errors.name.message}` });
     } else if (error.errors.number){
-      return res.status(400).send({ error: `${error.errors.number.message}`});
+      return res.status(400).send({ error: `${error.errors.number.message}` });
     }
   }
 
