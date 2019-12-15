@@ -46,42 +46,16 @@ app.get('/info', (req, res, next) => {
 app.post('/api/persons', (req, res, next) => {
   const body = req.body;
 
-  if (!body.name || !body.number) {
-    return res.status(400).json({
-      error: 'both name and number are required'
-    });
-  }
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  });
 
-  Person.find({ name: body.name })
-    .then(foundPerson => {
-      if (foundPerson.length !== 0) {
-        // already exists
-        const person = {
-          name: body.name,
-          number: body.number,
-        };
-        
-        Person.findByIdAndUpdate(foundPerson[0]._id, person, { new: true })
-          .then(updatedPerson => {
-            res.json(updatedPerson.toJSON());
-          })
-          .catch(error => next(error));
-      } else {
-        // new person
-        const person = new Person({
-          name: body.name,
-          number: body.number,
-        });
-
-        person.save()
-          .then(savedPerson => {
-            res.json(savedPerson.toJSON());
-          })
-          .catch(error => next(error));
-      }
+  person.save()
+    .then(savedPerson => {
+      res.json(savedPerson.toJSON());
     })
     .catch(error => next(error));
-
 });
 
 app.delete('/api/persons/:id', (req, res, next) => {
@@ -103,6 +77,12 @@ const errorHandler = (error, req, res, next) => {
 
   if (error.name === 'CastError' && error.kind === 'ObjectId') {
     return res.status(400).send({ error: 'malformatted id' });
+  } else if (error.name === 'ValidationError') {
+    if (error.errors.name) {
+      return res.status(400).send({ error: `${error.errors.name.message}`});
+    } else if (error.errors.number){
+      return res.status(400).send({ error: `${error.errors.number.message}`});
+    }
   }
 
   next(error);
